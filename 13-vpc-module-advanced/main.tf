@@ -56,10 +56,17 @@ resource "aws_route_table" "public_route_table" {
   vpc_id = aws_vpc.main_vpc.id
   tags   = merge(var.common_tags, { Name = "${var.project_name}-public-rt" })
 
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.main_igw.id
-  }
+  # route {
+  #   cidr_block = "0.0.0.0/0"
+  #   gateway_id = aws_internet_gateway.main_igw.id
+  # }
+}
+
+# Always define the routes separately
+resource "aws_route" "public_route" {
+  route_table_id = aws_route_table.public_route_table.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id = aws_internet_gateway.main_igw.id
 }
 
 resource "aws_eip" "eip" {
@@ -80,21 +87,36 @@ resource "aws_route_table" "private_route_table" {
   vpc_id = aws_vpc.main_vpc.id
   tags   = merge(var.common_tags, { Name = "${var.project_name}-private-rt" })
 
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_nat_gateway.nat_gw.id
-  }
+  # route {
+  #   cidr_block = "0.0.0.0/0"
+  #   gateway_id = aws_nat_gateway.nat_gw.id
+  # }
+}
+
+# Always define the routes separately
+resource "aws_route" "private_route" {
+  route_table_id = aws_route_table.private_route_table.id
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id = aws_nat_gateway.nat_gw.id
 }
 
 resource "aws_route_table" "database_route_table" {
   vpc_id = aws_vpc.main_vpc.id
   tags   = merge(var.common_tags, { Name = "${var.project_name}-database-rt" })
 
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_nat_gateway.nat_gw.id
-  }
+  # route {
+  #   cidr_block = "0.0.0.0/0"
+  #   gateway_id = aws_nat_gateway.nat_gw.id
+  # }
 }
+
+# Always define the routes separately
+resource "aws_route" "database_route" {
+  route_table_id = aws_route_table.database_route_table.id
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id = aws_nat_gateway.nat_gw.id
+}
+
 
 resource "aws_route_table_association" "public_rt_assoc" {
   count          = length(var.public_subnet_cidr)
@@ -115,9 +137,10 @@ resource "aws_route_table_association" "database_rt_assoc" {
 }
 
 # grouping database subnets 
-resource "aws_db_subnet_group" "database-sub-group" {
+resource "aws_db_subnet_group" "database_sub_group" {
   name       = var.project_name
-  subnet_ids = aws_subnet.public_subnet[*].id
-
+  subnet_ids = aws_subnet.database_subnet[*].id
   tags = merge(var.common_tags, {Name = "${var.project_name}-db-sub-group"})
 }
+
+

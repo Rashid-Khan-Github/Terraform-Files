@@ -1,3 +1,5 @@
+#=====================================================
+# VPC variables
 
 variable "cidr_block" {
   default = "10.0.0.0/16"
@@ -5,12 +7,17 @@ variable "cidr_block" {
 
 
 variable "project_name" {
-  default = "Roboshop"
+  default = "roboshop"
+}
+
+variable "env" {
+  default = "dev"
 }
 
 variable "common_tags" {
   default = {
     Project     = "Roboshop"
+    Component   = "vpc"
     Environment = "DEV"
     Terraform   = true
   }

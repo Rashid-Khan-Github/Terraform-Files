@@ -1,6 +1,6 @@
-# output "vpc_id" {
-#   value = module.vpc.vpc_id         # module.<resource-name>.<output-variable-name>
-# }
+output "vpc_id" {
+  value = module.vpc.vpc_id         # module.<resource-name>.<output-variable-name>
+}
 
 # output "azs_info_out" {
 #   value = module.vpc_adv.azs_output
@@ -17,4 +17,12 @@
 # output "database_subnet_ids" {
 #   value = local.database_subnet_ids
 # }
+
+# output "ami_id_value" {
+#   value = data.aws_ami.devops_ami
+# }
+
+output "instances" {
+  value = local.instances_output
+}
 

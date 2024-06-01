@@ -8,8 +8,8 @@ terraform {
   }
 
   backend "s3" {
-    bucket         = "my-bucket-robo"
-    key            = "terraform.tfstate"
+    bucket         = "my-robo-bucket"
+    key            = "redis"
     region         = "us-east-1"
     dynamodb_table = "robo-locking"
   }
